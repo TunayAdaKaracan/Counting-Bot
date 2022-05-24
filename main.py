@@ -40,7 +40,6 @@ class Counter(discord.Bot):
     async def on_message(self, message: discord.Message):
         if message.author.bot: return
         if isinstance(message.channel, discord.DMChannel): return
-        if message.content.startswith("-"): return
         if message.guild.id == self.data["guild-id"] and message.channel.id == self.data["channel-id"]:
             if message.content.isdigit() or str(float(self.number+1)) == message.content:
                 if int(message.content) == self.number+1:
@@ -55,14 +54,15 @@ class Counter(discord.Bot):
                     await self.push_number(self.number + 1)
                     self.number += 1
                     return
-            if self.data["delete-wrong-numbers"]:
-                errormessage = await message.channel.send(f"{message.author.mention} Please Type {self.number+1}")
-                await message.delete(delay=5)
-                await errormessage.delete(delay=5)
-            else:
-                await message.channel.send(f"{message.author.mention} RUINED AT {self.number+1}! Start From **1**")
-                await self.push_number(0)
-                self.number = 0
+                elif valid:
+                    if self.data["delete-wrong-numbers"]:
+                        errormessage = await message.channel.send(f"{message.author.mention} Please Type {self.number+1}")
+                        await message.delete(delay=5)
+                        await errormessage.delete(delay=5)
+                    else:
+                        await message.channel.send(f"{message.author.mention} RUINED AT {self.number+1}! Start From **1**")
+                        await self.push_number(0)
+                        self.number = 0
 
 
 if __name__ == "__main__":
