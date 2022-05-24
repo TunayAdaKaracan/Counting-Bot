@@ -51,7 +51,7 @@ class Counter(discord.Bot):
             else:
                 valid, text = await self.get_number(message.content)
                 if valid and ((text.isdigit() and int(text) == self.number + 1) or str(float(self.number+1)) == text):
-                    await message.add_reaction("✔️")
+                    await message.add_reaction("✅")
                     await self.push_number(self.number + 1)
                     self.number += 1
                     return
